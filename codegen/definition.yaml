@@ -1,0 +1,956 @@
+meta:
+  clang-type-prefix: "Vlcb"
+spec:
+  - type: Enum
+    identifier: ProcessorManufacturer
+    data_type: u8
+    meta:
+      clang-enum-var-prefix: VLCB_PM_
+    comments: |
+      Processor manufacturer codes
+    body:
+      - identifier: Microchip
+        value: 1
+      - identifier: Atmel
+        value: 2
+      - identifier: Arm
+        value: 3
+  - type: Enum
+    identifier: ArmProcessor
+    data_type: u8
+    meta:
+      clang-enum-var-prefix: VLCB_PM_ARM_
+      dont-split-enum-var: true
+    comments: |
+      ARM Processor type codes (used by FCU to identify correct bootloader compatibility)
+    body:
+      - identifier: Arm1176JzfS
+        value: 1
+      - identifier: CortexA7
+        value: 2
+      - identifier: CortexA53
+        value: 3
+  - type: Enum
+    identifier: MicrochipProcessor
+    data_type: u8
+    meta:
+      clang-enum-var-prefix: VLCB_PM_MICROCHIP_
+    comments: |
+      Microchip Processor type codes (used by FCU to identify correct bootloader compatibility)
+    body:
+      - identifier: P18F2480
+        value: 1
+      - identifier: P18F4480
+        value: 2
+      - identifier: P18F2580
+        value: 3
+      - identifier: P18F4580
+        value: 4
+      - identifier: P18F2585
+        value: 5
+      - identifier: P18F4585
+        value: 6
+      - identifier: P18F2680
+        value: 7
+      - identifier: P18F4680
+        value: 8
+      - identifier: P18F2682
+        value: 9
+      - identifier: P18F4682
+        value: 10
+      - identifier: P18F2685
+        value: 11
+      - identifier: P18F4685
+        value: 12
+      - identifier: P18F25K80
+        value: 13
+      - identifier: P18F45K80
+        value: 14
+      - identifier: P18F26K80
+        value: 15
+      - identifier: P18F46K80
+        value: 16
+      - identifier: P18F65K80
+        value: 17
+      - identifier: P18F66K80
+        value: 18
+      - identifier: P18F25K83
+        value: 19
+      - identifier: P18F26K83
+        value: 20
+      - identifier: P18F27Q84
+        value: 21
+      - identifier: P18F47Q84
+        value: 22
+      - identifier: P18F27Q83
+        value: 23
+      - identifier: P18F14K22
+        value: 25
+      - identifier: P32MX534F064
+        value: 30
+      - identifier: P32MX564F064
+        value: 31
+      - identifier: P32MX564F128
+        value: 32
+      - identifier: P32MX575F256
+        value: 33
+      - identifier: P32MX575F512
+        value: 34
+      - identifier: P32MX764F128
+        value: 35
+      - identifier: P32MX775F256
+        value: 36
+      - identifier: P32MX775F512
+        value: 37
+      - identifier: P32MX795F512
+        value: 38
+  - type: Enum
+    identifier: BusType
+    meta:
+      clang-enum-var-prefix: VLCB_BUS_
+      dont-split-enum-var: true
+    data_type: u8
+    comments: |
+      BUS type that module is connected to
+    body:
+      - identifier: CAN
+        value: 1
+      - identifier: Ethernet
+        value: 2
+      - identifier: MiWi
+        value: 3
+      - identifier: USB
+        value: 4
+  - type: Enum
+    identifier: DccCabDataCode
+    meta:
+      clang-enum-var-prefix: VLCB_DCC_CAB_
+    data_type: u8
+    comments: |
+      Defines the meaning of the remaining 3 bytes of the CABDAT message
+    body:
+      - identifier: CabSignalling
+        value: 1
+        comments: |
+          CABSIG
+          Transmitted by a layout control system to send
+          signal aspects to be displayed on a cab handset as cab
+          signalling.
+  # - type: Enum
+  #   #todo: these are probably flags figure the values from docs
+  #   identifier: DccCabSignallingAspect1
+  #   data_type: u8
+  #   comments: |
+  #     Aspect codes for the first aspect byte of the CABDAT message
+  #
+  #     Colours in brackets correspond to UK colour light
+  #     signalling, the given aspect names may be displayed differently
+  #     in other signalling systems
+  #   body:
+  #     - identifier: Danger
+  #       value: 0
+  #     - identifier: Caution
+  #       value: 1
+  #     - identifier: PreliminaryCaution
+  #       value: 2
+  #     - identifier: Proceed
+  #       value: 3
+  #     - identifier: CallOn
+  #       value: 4
+  #       comments: Set bit 2 for call-on - main aspect will usually be at danger
+  #     - identifier: Theatre
+  #       value: 8
+  #       comments: Set bit 3 to 0 for upper nibble is feather location, set 1 for upper nibble is theatre code
+  # # - type: Enum
+  # #   #todo: these are probably flags
+  # #   identifier: DccCabSignallingAspect2
+  # #   data_type: u8
+  # #   comments: |
+  # #     Aspect codes for CDAT_CABSIG
+  #
+  # #     Second Aspect byte
+  #   body:
+  #     - identifier: Lit
+  #       value: 0
+  #       comments: Set bit 0 to indicate lit
+  #     - identifier: Lunar
+  #       value: 1
+  #       comments: Set bit 1 for lunar indication
+  - type: Enum
+    identifier: CommandError
+    meta:
+      clang-enum-var-prefix: VLCB_CMDERR
+    data_type: u8
+    comments: |
+      Error codes for CMDERR message
+    body:
+      - identifier: InvalidCommand
+        value: 1
+        comments: Invalid command
+      - identifier: NotInLearnMode
+        value: 2
+        comments: The mode is not currently in learn mode
+      - identifier: NotInSetupMode
+        value: 3
+        comments: The mode is not currently in setup mode
+      - identifier: TooManyEvents
+        value: 4
+        comments: |
+          Too many events provisioned in module
+
+          The event storage is exhausted
+      - identifier: NoEv
+        value: 5
+        comments: No Event-Variable
+      - identifier: InvalidEvIndex
+        value: 6
+        comments: Invalid EV index
+      - identifier: InvalidEvent
+        value: 7
+        comments: Invalid event
+      - identifier: InvalidEventIndex
+        value: 8
+        comments: Invalid event index
+      - identifier: InvalidParamIndex
+        value: 9
+        comments: Invalid param index
+      - identifier: InvalidNvIndex
+        value: 10
+        comments: Invalid NV index
+      - identifier: InvalidEvValue
+        value: 11
+        comments: Invalid EV value
+      - identifier: InvalidNvValue
+        value: 12
+        comments: Invalid NV value
+      - identifier: AnotherModuleIsInLearnMode
+        value: 13
+        comments: |
+          Another module is already in learn mode
+
+          Sent when module in learn mode sees NNLRN for different module (also exits learn mode)
+  - type: Enum
+    identifier: DccError
+    meta:
+      clang-enum-var-prefix: VLCB_DCC_ERR
+    data_type: u8
+    comments: |
+      Error codes for ERR message
+    body:
+      - identifier: LocoStackIsFull
+        value: 1
+      - identifier: LocoAddressIsTaken
+        value: 2
+      - identifier: SessionIsNotPresent
+        value: 3
+      - identifier: EmptyConsist
+        value: 4
+      - identifier: LocoWasNotFound
+        value: 5
+      - identifier: RxBufferOverflow
+        value: 6
+      - identifier: InvalidRequest
+        value: 7
+      - identifier: SessionWasCancelled
+        value: 8
+  - type: Enum
+    identifier: Manufacturer
+    meta:
+      clang-enum-var-prefix: VLCB_MANU_
+    data_type: u8
+    comments: |
+      Manufacturer definitions
+
+      Here are definitions for all known MERG registered manufacturers.
+    body:
+      - identifier: Development
+        value: 13
+        comments: |
+          Develoment mode manufacturer
+
+          For manufacturers who don't have a manufacturer id yet or
+          for lib developers during testing.
+
+          Do not use in production!
+      - identifier: MERG
+        value: 165
+        comments: https://www.merg.co.uk
+      - identifier: SPROG
+        value: 44
+        comments: https://www.sprog-dcc.co.uk/
+      - identifier: ROCRAIL
+        value: 70
+        comments: http://www.rocrail.net
+      - identifier: SPECTRUM
+        value: 80
+        comments: http://animatedmodeler.com  (Spectrum Engineering)
+      - identifier: MERG_VLCB
+        value: 250
+        comments: range of MERG VLCB modules
+      - identifier: SYSPIXIE
+        value: 249
+        comments: Konrad Orlowski
+      - identifier: RME
+        value: 248
+        comments: http://rmeuk.com  (Railway Modelling Experts Limited)
+  - type: Enum
+    identifier: MergModuleType
+    meta:
+      clang-enum-var-prefix: VLCB_MERG_MODULE_
+    data_type: u8
+    comments: |
+      MERG Module types
+    body:
+      - identifier: SLIM
+        value: 0
+        comments: default for SLiM nodes
+      - identifier: CANACC4
+        value: 1
+        comments: Solenoid point driver
+      - identifier: CANACC5
+        value: 2
+        comments: Motorised point driver
+      - identifier: CANACC8
+        value: 3
+        comments: 8 digital outputs
+      - identifier: CANACE3
+        value: 4
+        comments: Control panel switch/button encoder
+      - identifier: CANACE8C
+        value: 5
+        comments: 8 digital inputs
+      - identifier: CANLED
+        value: 6
+        comments: 64 led driver
+      - identifier: CANLED64
+        value: 7
+        comments: 64 led driver (multi leds per event)
+      - identifier: CANACC4_2
+        value: 8
+        comments: 12v version of CANACC4
+      - identifier: CANCAB
+        value: 9
+        comments: CANCAB hand throttle
+      - identifier: CANCMD
+        value: 10
+        comments: CANCMD command station
+      - identifier: CANSERVO
+        value: 11
+        comments: 8 servo driver (on canacc8 or similar hardware)
+      - identifier: CANBC
+        value: 12
+        comments: BC1a command station
+      - identifier: CANRPI
+        value: 13
+        comments: RPI and RFID interface
+      - identifier: CANTTCA
+        value: 14
+        comments: Turntable controller (turntable end)
+      - identifier: CANTTCB
+        value: 15
+        comments: Turntable controller (control panel end)
+      - identifier: CANHS
+        value: 16
+        comments: Handset controller for old BC1a type handsets
+      - identifier: CANTOTI
+        value: 17
+        comments: Track occupancy detector
+      - identifier: CAN8I8O
+        value: 18
+        comments: 8 inputs 8 outputs
+      - identifier: CANSERVO8C
+        value: 19
+        comments: Canservo with servo position feedback
+      - identifier: CANRFID
+        value: 20
+        comments: RFID input
+      - identifier: CANTC4
+        value: 21
+      - identifier: CANACE16C
+        value: 22
+        comments: 16 inputs
+      - identifier: CANIO8
+        value: 23
+        comments: 8 way I/O
+      - identifier: CANSNDX
+        value: 24
+      - identifier: CANEther
+        value: 25
+        comments: Ethernet interface
+      - identifier: CANSIG64
+        value: 26
+        comments: Multiple aspect signalling for CANLED module
+      - identifier: CANSIG8
+        value: 27
+        comments: Multiple aspect signalling for CANACC8 module
+      - identifier: CANCOND8C
+        value: 28
+        comments: Conditional event generation
+      - identifier: CANPAN
+        value: 29
+        comments: Control panel 32/32
+      - identifier: CANACE3C
+        value: 30
+        comments: Newer version of CANACE3 firmware
+      - identifier: CANPanel
+        value: 31
+        comments: Control panel 64/64
+      - identifier: CANMIO
+        value: 32
+        comments: Multiple I/O – Universal CANMIO firmware
+      - identifier: CANACE8MIO
+        value: 33
+        comments: Multiple IO module 16 inputs emulating CANACE8C on CANMIO hardware
+      - identifier: CANSOL
+        value: 34
+        comments: Solenoid driver module
+      - identifier: CANBIP
+        value: 35
+        comments: Universal CANBIP firmware - Bipolar IO module with additional 8 I/O pins (CANMIO family)
+      - identifier: CANCDU
+        value: 36
+        comments: Solenoid driver module with additional 6 I/O pins (CANMIO family)
+      - identifier: CANACC4CDU
+        value: 37
+        comments: CANACC4 firmware ported to CANCDU
+      - identifier: CANWiBase
+        value: 38
+        comments: CAN to MiWi base station
+      - identifier: WiCAB
+        value: 39
+        comments: Wireless cab using MiWi protocol
+      - identifier: CANWiFi
+        value: 40
+        comments: CAN to WiFi connection with Withrottle to CBUS protocol conversion
+      - identifier: CANFTT
+        value: 41
+        comments: Turntable controller configured using FLiM
+      - identifier: CANHNDST
+        value: 42
+        comments: Handset (alternative to CANCAB)
+      - identifier: CANTCHNDST
+        value: 43
+        comments: Touchscreen handset
+      - identifier: CANRFID8
+        value: 44
+        comments: multi-channel RFID reader
+      - identifier: CANmchRFID
+        value: 45
+        comments: either a 2ch or 8ch RFID reader
+      - identifier: CANPiWi
+        value: 46
+        comments: a Raspberry Pi based module for WiFi
+      - identifier: CAN4DC
+        value: 47
+        comments: DC train controller
+      - identifier: CANELEV
+        value: 48
+        comments: Nelevator controller
+      - identifier: CANSCAN
+        value: 49
+        comments: 128 switch inputs
+      - identifier: CANMIO_SVO
+        value: 50
+        comments: 16MHz 25k80 version of CANSERVO8c on CANMIO hardware
+      - identifier: CANMIO_INP
+        value: 51
+        comments: 16MHz 25k80 version of CANACE8MIO on CANMIO hardware
+      - identifier: CANMIO_OUT
+        value: 52
+        comments: 16MHz 25k80 version of CANACC8 on CANMIO hardware
+      - identifier: CANBIP_OUT
+        value: 53
+        comments: 16MHz 25k80 version of CANACC5 on CANBIP hardware
+      - identifier: CANASTOP
+        value: 54
+        comments: DCC stop generator
+      - identifier: CANCSB
+        value: 55
+        comments: CANCMD with on board 3A booster
+      - identifier: CANMAG
+        value: 56
+        comments: Magnet on Track detector
+      - identifier: CANACE16CMIO
+        value: 57
+        comments: 16 input equivaent to CANACE8C
+      - identifier: CANPiNODE
+        value: 58
+        comments: CBUS module based on Raspberry Pi
+      - identifier: CANDISP
+        value: 59
+        comments: 25K80 version of CANLED64 (IHart and MB)
+      - identifier: CANCOMPUTE
+        value: 60
+        comments: Compute Event processing engine
+      - identifier: CANRC522
+        value: 61
+        comments: Read/Write from/to RC522 RFID tags
+      - identifier: CANINP
+        value: 62
+        comments: 8 inputs module (2g version of CANACE8c) (Pete Brownlow)
+      - identifier: CANOUT
+        value: 63
+        comments: 8 outputs module (2g version of CANACC8) (Pete Brownlow)
+      - identifier: CANXIO
+        value: 64
+        comments: Extended CANMIO (24 I/O ports) (Pete Brownlow)
+      - identifier: CANCABDC
+        value: 65
+        comments: DC cab
+      - identifier: CANRCOM
+        value: 66
+        comments: DC Railcom detector/reader
+      - identifier: CANMP3
+        value: 67
+        comments: "MP3 sound player in response to events (eg: station announcements) (Duncan Greenwood)"
+      - identifier: CANXMAS
+        value: 68
+        comments: Addressed RGB LED driver (Duncan Greenwood)
+      - identifier: CANSVOSET
+        value: 69
+        comments: Servo setting box (Duncan Greenwood)
+      - identifier: CANCMDDC
+        value: 70
+        comments: DC Command station
+      - identifier: CANTEXT
+        value: 71
+        comments: Text message display
+      - identifier: CANASIGNAL
+        value: 72
+        comments: Signal controller
+      - identifier: CANSLIDER
+        value: 73
+        comments: DCC cab with slider control (Dave Radcliffe)
+      - identifier: CANDCATC
+        value: 74
+        comments: DC ATC module (Dave Harris)
+      - identifier: CANGATE
+        value: 75
+        comments: Logic module using and/or gates (Phil Silver)
+      - identifier: CANSINP
+        value: 76
+        comments: Q series PIC input module (Ian Hart)
+      - identifier: CANSOUT
+        value: 77
+        comments: Q series PIC input module (Ian Hart)
+      - identifier: CANSBIP
+        value: 78
+        comments: Q series PIC input module (Ian Hart)
+      - identifier: CANBUFFER
+        value: 79
+        comments: Message buffer (Phil Silver)
+      - identifier: CANLEVER
+        value: 80
+        comments: Lever frame module (Tim Coombs)
+      - identifier: CANSHIELD
+        value: 81
+        comments: Kit 110 Arduino shield test firmware
+      - identifier: CAN4IN4OUT
+        value: 82
+        comments: 4 inputs 4 outputs (Arduino module)
+      - identifier: CANCMDB
+        value: 83
+        comments: CANCMD with built in booster (Simon West)
+      - identifier: CANPIXEL
+        value: 84
+        comments: neopixel driver (Jon Denham)
+      - identifier: CANCABPE
+        value: 85
+        comments: Cab2 with pot or encoder (Simon West hardware, Jon Denham new C firmware)
+      - identifier: CANSMARTTD
+        value: 86
+        comments: Smart train detector (Michael Smith)
+      - identifier: VLCB
+        value: 0xFC
+        comments: All VLCB modules have the same ID
+      - identifier: CAN_SW
+        value: 0xFF
+        comments: Software nodes
+      - identifier: EMPTY
+        value: 0xFE
+        comments: Empty module, bootloader only
+      - identifier: CANUSB
+        value: 0xFD
+        comments: USB interface
+      # - identifier: CANDEV
+      #   value: 0xFC
+      #   comments: Module type for use by developers when developing something new
+  - type: Flags
+    identifier: ModuleFlags
+    meta:
+      clang-enum-var-prefix: VLCB_MODULE_FLAG_
+    data_type: u8
+    comments: |
+      Flags in node parameter FLAGS
+    body:
+      #todo: these are flags though i have to figure out if the values are bits or actual masks
+      - identifier: EventsUnsupported
+        value: 0
+        comments: Module doesn't support events
+      - identifier: EventConsumer
+        value: 1
+        comments: Module is a consumer of events
+      - identifier: EventProducer
+        value: 2
+        comments: Module is a producer of events
+      - identifier: EventCombi
+        value: 3
+        comments: Module is both a consumer and producer of events
+      - identifier: FLiM
+        meta:
+          dont-split-enum-var: true
+        value: 4
+        comments: Module is in FLiM (CBUS)
+      - identifier: NormalMode
+        value: 4
+        comments: Module is in Normal mode (VLCB)
+      - identifier: Bootloader
+        value: 8
+        comments: Module supports the FCU bootloader protocol
+      - identifier: ConsumeOwnEvents
+        value: 16
+        comments: Module can consume its own events
+      - identifier: LearnMode
+        value: 32
+        comments: Module is in learn mode
+      - identifier: VLCB
+        value: 64
+        comments: Module is VLCB compatible
+      - identifier: ServiceDiscovery
+        value: 64
+        comments: Module supports Service Discovery (Deprecated in favour of PF_VLCB.)
+  # - type: Enum
+  #   identifier: CbusParamOffsetsPic
+  #   data_type: u8
+  #   #todo: this is not an enum
+  #   comments: |
+  #     Offsets to other values stored at the top of the parameter block.
+  #     These are not returned by opcode PARAN, but are present in the hex
+  #     file for FCU.
+  #   body:
+  #     - identifier: COUNT
+  #       value: 0x18
+  #       comments: Number of parameters implemented
+  #     - identifier: NAME
+  #       value: 0x1A
+  #       comments: 4 byte Address of Module type name, up to 8 characters null terminated
+  #     - identifier: CKSUM
+  #       value: 0x1E
+  #       comments: Checksum word at end of parameters
+  - type: Enum
+    identifier: ModuleParam
+    meta:
+      clang-enum-var-prefix: VLCB_MODULE_PARAM_
+    data_type: u8
+    comments: |
+      Parameter index numbers (readable by OPC_RQNPN, returned in OPC_PARAN)
+      Index numbers count from 1, subtract 1 for offset into parameter block
+      Note that RQNPN with index 0 returns the parameter count
+    body:
+      - identifier: ModuleParameterCount
+        value: 0
+        comments: Number of parameters
+      - identifier: ModuleManufacturer
+        value: 1
+        comments: Manufacturer id
+      - identifier: MinorVersion
+        value: 2
+        comments: Minor version (single alphabetic character)
+      - identifier: ModuleType
+        value: 3
+        comments: Module type code
+      - identifier: MaxEventCount
+        value: 4
+        comments: Number of events supported
+      - identifier: EventVariableCount
+        value: 5
+        comments: Event variables per event
+      - identifier: NodeVariableCount
+        value: 6
+        comments: Number of Node variables
+      - identifier: MajorVersion
+        value: 7
+        comments: Major version (numeric)
+      - identifier: NodeFlags
+        value: 8
+        comments: Node flags
+      - identifier: CpuId
+        value: 9
+        comments: Processor type
+      - identifier: BusType
+        value: 10
+        comments: Bus type
+      - identifier: LoadAddress
+        value: 11
+        comments: load address, 4 bytes
+      - identifier: CpuManufacturerId
+        value: 15
+        comments: CPU manufacturer's id as read from the chip config space, 4 bytes (note - read from cpu at runtime, so not included in checksum)
+      - identifier: CpuManufacturer
+        value: 19
+        comments: CPU manufacturer code
+      - identifier: BetaVersion
+        value: 20
+        comments: Beta revision (numeric), or 0 if release
+  - type: Enum
+    identifier: RocRailModuleType
+    meta:
+      clang-enum-var-prefix: VLCB_ROCRAIL_MODULE_
+    data_type: u8
+    comments: |
+      Rocrail Module types
+    body:
+      - identifier: CANGC1
+        value: 1
+        comments: RS232 PC interface
+      - identifier: CANGC2
+        value: 2
+        comments: 16 I/O
+      - identifier: CANGC3
+        value: 3
+        comments: Command station (derived from cancmd)
+      - identifier: CANGC4
+        value: 4
+        comments: 8 channel RFID reader
+      - identifier: CANGC5
+        value: 5
+        comments: Cab for fixed panels (derived from cancab)
+      - identifier: CANGC6
+        value: 6
+        comments: 4 channel servo controller
+      - identifier: CANGC7
+        value: 7
+        comments: Fast clock module
+      - identifier: CANGC1e
+        value: 11
+        comments: CAN<->Ethernet interface
+  - type: Enum
+    identifier: SpectrumModuleType
+    meta:
+      clang-enum-var-prefix: VLCB_SPECTRUM_MODULE_
+    data_type: u8
+    comments: |
+      Spectrum Engineering Animated Modeller module types
+    body:
+      - identifier: AMCTRLR
+        value: 1
+        comments: Animation controller (firmware derived from cancmd)
+      - identifier: DUALCAB
+        value: 2
+        comments: Dual cab based on cancab
+  - type: Enum
+    identifier: SprogModuleType
+    meta:
+      clang-enum-var-prefix: VLCB_SPROG_MODULE_
+    data_type: u8
+    comments: |
+      Sprog Module types
+    body:
+      - identifier: CANPiSPRG3
+        value: 1
+        comments: Pi-SPROG 3 programmer/command station
+      - identifier: CANSPROG3P
+        value: 2
+        comments: SPROG 3 Plus programmer/command station
+      - identifier: CANSPROG
+        value: 3
+        comments: CAN SPROG programmer/command station
+      - identifier: CANSBOOST
+        value: 4
+        comments: System Booster
+      - identifier: CANPiSPRGP
+        value: 5
+        comments: Pi-SPROG 3 Plus programmer/command station
+      - identifier: CANSOLNOID
+        value: 8
+        comments: 8-channel (4-pairs) Solenoid I/O module
+      - identifier: CANSERVOIO
+        value: 50
+        comments: 8-channel Servo I/O module
+      - identifier: CANISB
+        value: 100
+        comments: CAN ISB Isolated CAN USB Interface
+      - identifier: CANSOLIO
+        value: 101
+        comments: 8-channel (4-pairs) Solenoid I/O module
+  - type: Enum
+    identifier: DccServiceModeStatus
+    meta:
+      clang-enum-var-prefix: VLCB_DCC_SVC_MODE_STAT_
+    data_type: u8
+    comments: |
+      Status codes for SSTAT message
+    body:
+      - identifier: NoAck
+        value: 1
+      - identifier: Ovld
+        value: 2
+      - identifier: WriteAck
+        value: 3
+      - identifier: Busy
+        value: 4
+      - identifier: CvError
+        value: 5
+  - type: Enum
+    identifier: DccThrottleMode
+    meta:
+      clang-enum-var-prefix: VLCB_DCC_THROTTLE_MODE_
+    data_type: u8
+    comments: |
+      Modes for STMOD
+    body:
+      # - identifier: SPD_MASK
+      #   value: 3
+      - identifier: Step128
+        value: 0
+        comments: "128-step speed mode"
+      - identifier: Step14
+        value: 1
+        comments: "14-step speed mode"
+      - identifier: Step28Interleaved
+        value: 2
+        comments: "interleaved 28-step speed mode"
+      - identifier: Step28
+        value: 3
+        comments: "28-step speed mode"
+  - type: Enum
+    identifier: SysPixieModuleType
+    meta:
+      clang-enum-var-prefix: VLCB_SYSPIXIE_MODULE_
+      dont-split-enum-var: true
+    data_type: u8
+    comments: |
+      SysPixie Module types (Konrad Orlowski)
+    body:
+      - identifier: CANPMSense
+        value: 1
+        comments: Motorised point motor driver with current sense
+  - type: Enum
+    identifier: GenericResponseStatus
+    meta:
+          clang-enum-var-prefix: VLCB_GENERIC_RESPONSE_STAT_
+    data_type: u8
+    comments: |
+      GRSP codes
+    body:
+      - identifier: Ok
+        value: 0
+        comments: Success
+      - identifier: UnknownPersistentMemoryType
+        value: 254
+        comments: Unknown non volatile memory type
+      - identifier: InvalidDiagnostic
+        value: 253
+        comments: Invalid diagnostic
+      - identifier: InvalidService
+        value: 252
+        comments: Invalid service
+      - identifier: InvalidCommandParameter
+        value: 251
+        comments: Invalid parameter in command
+      - identifier: InvalidMode
+        value: 250
+        comments: Invalid Mode
+  - type: Enum
+    identifier: ModuleMode
+    meta:
+      clang-enum-var-prefix: VLCB_MODULE_MODE_
+    data_type: u8
+    comments: |
+      Parameters to the MODE op-code
+
+      Exclusive modes
+    body:
+    #todo: we should figure out how to separate these for better API definition as the opcode can use those turn on/off ones, etc but can't' say that the mode is suddenly in setup mode
+    #   verify this but i think it was like that
+      - identifier: Uninitialized
+        value: 0xFF
+        comments: Uninitialized / factory settings
+        is_default: true
+      - identifier: InSetup
+        value: 0
+        comments: Set up mode
+      - identifier: Normal
+        value: 1
+        comments: Normal operation mode
+      - identifier: EnableLearnMode
+        value: 0x08
+        comments: Turn on learn mode
+      - identifier: DisableLearnMode
+        value: 0x09
+        comments: Turn off learn mode
+      - identifier: EnableEventAck
+        value: 0x0A
+        comments: Turn on event acknowledgements
+      - identifier: DisableEventAck
+        value: 0x0B
+        comments: Turn off event acknowledgements
+      - identifier: EnableHeartbeat
+        value: 0x0C
+        comments: Turn on heartbeat
+      - identifier: DisableHeartbeat
+        value: 0x0D
+        comments: Turn off heartbeat
+      - identifier: Bootloader
+        value: 0x0E
+        comments: PIC Boot loader mode
+  - type: Enum
+    identifier: ServiceType
+    meta:
+      clang-enum-var-prefix: VLCB_SVC_TYPE_
+    data_type: u8
+    comments: |
+      VLCB Service Types
+    body:
+      - identifier: Internal
+        value: 0
+        comments: |
+          Internal service.
+
+          Can be used for implementing certain behaviors while
+          using the service pattern for the implementation.
+
+          Will not be shown in list of services requested by RQSD.
+      - identifier: MinimumNodeService
+        value: 1
+        comments: |
+          The minimum node service.
+
+          All modules must implement this.
+      - identifier: NodeVariable
+        value: 2
+        comments: The NV service.
+      - identifier: CanBus
+        value: 3
+        comments: |
+          CAN service.
+
+          Deals with CANID enumeration.
+      - identifier: LegacyEventTeaching
+        value: 4
+        comments: Old (CBUS) event teaching service.
+      - identifier: EventProducer
+        value: 5
+        comments: Event producer service.
+      - identifier: EventConsumer
+        value: 6
+        comments: Event comsumer service.
+      - identifier: EventTeaching
+        value: 7
+        comments: New event teaching service.
+      - identifier: ConsumeOwnEvents
+        value: 8
+        comments: Consume own events service.
+      - identifier: EventAcknowledge
+        value: 9
+        comments: |
+          Event acknowledge service.
+
+          Useful for debugging event configuration.
+      - identifier: Bootloader
+        value: 10
+        comments: FCU/PIC bootloader service.
+      - identifier: Streaming
+        value: 17
+        comments: Streaming (Long Messages) service.
+  - !include opcodes.yaml

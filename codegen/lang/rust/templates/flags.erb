@@ -1,0 +1,19 @@
+bitflags! {
+    <% if flags[:comments] %>
+    <%= renderer.r 'docblok', lines: flags[:comments] %>
+    <% end %>
+    <% if flags[:annotations] %>
+    <%= renderer.r 'annotations', annotations: flags[:annotations] %>
+    <% end %>
+    pub struct <%= flags[:identifier] %>: <%= flags[:data_type] %> {
+        <% flags[:body].each do |flag| %>
+        <% if flag['comments'] %>
+        <%= renderer.r 'docblok', lines: flag['comments'] %>
+        <% end %>
+        <% if flag['annotations'] %>
+        <%= renderer.r 'annotations', annotations: flag['annotations'] %>
+        <% end %>
+        const <%= flag['identifier'] %> = <%= "0b" + ("%0#{flags[:data_type_size]}b" % flag['value']) %>;
+        <% end %>
+    }
+}

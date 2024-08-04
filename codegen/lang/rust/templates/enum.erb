@@ -1,0 +1,16 @@
+<%= renderer.r 'docblok', lines: enum[:comments] %>
+<%= renderer.r 'annotations', annotations: enum[:annotations] %>
+pub enum <%= enum[:identifier] %> {
+    <% enum[:body].each do |variant| %>
+    <% if variant['comments'] %>
+    <%= renderer.r 'docblok', lines: variant['comments'] %>
+    <% end %>
+    <% if variant['annotations'] %>
+    <%= renderer.r 'annotations', annotations: variant['annotations'] %>
+    <% end %>
+    <% if variant['is_default'] == true %>
+    #[default]
+    <% end %>
+    <%= variant['identifier'] %> = <%= variant['value'] %>,
+    <% end %>
+}

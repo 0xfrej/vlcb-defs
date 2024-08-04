@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+gem 'yaml'
+gem 'dry-validation'
+gem 'dry-types'
+gem 'semverse'
+gem 'tomlib'

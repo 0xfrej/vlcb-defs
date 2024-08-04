@@ -1,0 +1,1174 @@
+---
+type: Enum
+identifier: OpCode
+meta:
+  clang-enum-var-prefix: VLCB_OPC_
+data_type: u8
+comments: |
+  VLCB opcodes
+body:
+- identifier: GeneralAck
+  comments: |-
+    General Acknowledgement.
+
+    Positive response to query/ request performed or report of availability on-line.
+  value: 0
+  commentsFrom: docs/opcode/ack.md
+
+- identifier: GeneralNack
+  comments: |-
+    General No Ack.
+
+    Negative response to query/ request denied.
+  value: 1
+  commentsFrom: docs/opcode/nak.md
+
+- identifier: BusHalt
+  comments: |-
+    Bus Halt.
+
+    Commonly broadcasted to all nodes to indicate CBUS is not available and
+    no further packets should be sent until a BON or ARST is received.
+  value: 2
+  commentsFrom: docs/opcode/hlt.md
+
+- identifier: BusResume
+  comments: |-
+    Bus ON
+
+    Commonly broadcasted to all nodes to indicate CBUS is available after a HLT
+    message was transmitted.
+  value: 3
+  commentsFrom: docs/opcode/bon.md
+
+- identifier: DccTrackPoweredOff
+  comments: |-
+    DCC track off.
+
+    Commonly broadcasted to all nodes by a command station to indicate track power is off
+    and no further command packets should be sent, except inquiries.
+  value: 4
+  commentsFrom: docs/opcode/tof.md
+
+- identifier: DccTrackPoweredOn
+  comments: |-
+    DCC track on.
+
+    Commonly broadcasted to all nodes by a command station to indicate track power is on.
+  value: 5
+  commentsFrom: docs/opcode/ton.md
+
+- identifier: DccEmergencyStopEngaged
+  comments: |-
+    DCC emergency stop.
+
+    Commonly broadcast to all nodes by a command station to indicate all engines have been emergency stopped.
+  value: 6
+  commentsFrom: docs/opcode/estop.md
+
+- identifier: RestartAllNodes
+  comments: |-
+    Perform reboot on all nodes.
+
+    Commonly broadcasted to all nodes to indicate a full system restart.
+    Similar to NNRST which directs a single node to be restarted.
+  value: 7
+  commentsFrom: docs/opcode/arst.md
+
+- identifier: DccTrackPowerOff
+  comments: |-
+    DCC request track off.
+
+    Sent to request change of track power state to “off”.
+  value: 8
+  commentsFrom: docs/opcode/rtof.md
+
+- identifier: DccTrackPowerOn
+  comments: |-
+    DCC request track on.
+
+    Sent to request change of track power state to “on”.
+  value: 9
+  commentsFrom: docs/opcode/rton.md
+
+- identifier: DccEmergencyStop
+  comments: |-
+    DCC request emergency stop.
+
+    Sent to request an emergency stop to all trains.
+    Does not affect accessory control.
+  value: 10
+  commentsFrom: docs/opcode/restp.md
+
+- identifier: DccQueryCommandStationStatus
+  comments: |-
+    Request Command Station Status.
+
+    Sent to query the status of the command station. See description of (STAT) for the response from the command station.
+  value: 12
+  commentsFrom: docs/opcode/rstat.md
+
+- identifier: QueryNodeInfo
+  comments: |-
+    Query node number.
+
+    Requests a PNN reply from each node on the bus.
+  value: 13
+  commentsFrom: docs/opcode/qnn.md
+
+- identifier: QueryNodeParameters
+  comments: |-
+    Request node parameters.
+
+    Sent to a node while in Setup mode to read its parameter set.
+    Used when initially configuring a node.
+  value: 16
+  commentsFrom: docs/opcode/rqnp.md
+
+- identifier: QueryModuleName
+  comments: |-
+    Request module name.
+
+    Sent by a node to request the name of the type of module that is in setup mode or Learn mode.
+    The module in setup mode or learn mode will reply with opcode NAME.
+  value: 17
+  commentsFrom: docs/opcode/rqmn.md
+
+- identifier: DccReleaseSession
+  comments: |-
+    Release Engine.
+
+    Sent by a CAB to the Command Station. The engine with that Session number is removed from the active engine list.
+  value: 33
+  commentsFrom: docs/opcode/kloc.md
+
+- identifier: DccQueryLocoStatus
+  comments: |-
+    Query engine.
+
+    Used to determine if the command station session is valid and to obtain information about the status of the locomotive.
+  value: 34
+  commentsFrom: docs/opcode/qloc.md
+
+- identifier: DccSessionKeepAlive
+  comments: |-
+    Session keep alive.
+
+    The cab sends a keep alive at regular intervals for the active session.
+    The interval between keep alive messages must be less than the session timeout implemented by the command station.
+  value: 35
+  commentsFrom: docs/opcode/dkeep.md
+
+- identifier: DebugMsg1
+  comments: |-
+    Debug message with one data byte.
+
+    Freeform status byte for debugging during CBUS module development. Not used during normal operation.
+  value: 48
+  commentsFrom: docs/opcode/dbg1.md
+
+- identifier: ExtOpCode
+  comments: |-
+    Extended opcode with zero additional bytes.
+    Reserved to allow the 0 additional bytes range to be extended by a further 256 opcodes.
+  value: 63
+  commentsFrom: docs/opcode/extc.md
+
+- identifier: DccRequestNewSession
+  comments: |-
+    Request engine session.
+
+    This command is typically sent by a cab to the command station following a change of the controlled decoder address.
+    RLOC is exactly equivalent to GLOC with all flag bits set to zero, but command stations
+  value: 64
+  commentsFrom: docs/opcode/rloc.md
+
+- identifier: DccQueryConsist
+  comments: |-
+    Query Consist.
+
+    Allows enumeration of a consist. Command station responds with PLOC if an engine exists at the specified index, otherwise responds
+  value: 65
+  commentsFrom: docs/opcode/qcon.md
+
+- identifier: SetNodeNumber
+  comments: |-
+    Set Node Number.
+
+    Sent by a configuration tool to assign a node number to a requesting node in response to a RQNN message. The target node must be in
+  value: 66
+  commentsFrom: docs/opcode/snn.md
+
+- identifier: DccAllocateLocoToActivity
+  comments: 'Allocate loco to activity.'
+  value: 67
+  commentsFrom: docs/opcode/aloc.md
+
+- identifier: DccSetThrottleMode
+  comments: |-
+    Set CAB session mode.
+
+    Bits 0–1: speed mode
+    - 00 =128 speed steps
+    - 01 =14 speed steps
+    - 10 =28 speed steps with interleave steps
+    - 11 =28 speed steps
+
+    Bit 2: service mode
+    Bit 3:sound control mode
+  value: 68
+  commentsFrom: docs/opcode/stmod.md
+
+- identifier: DccConsistAddLoco
+  comments: |-
+    Consist Engine.
+
+    Adds a decoder specified by Session to a consist.
+    Consist# has bit 7 set if consist direction is reversed.
+  value: 69
+  commentsFrom: docs/opcode/pcon.md
+
+- identifier: DccConsistRemoveLoco
+  comments: 'Removes a loco from a consist.'
+  value: 70
+  commentsFrom: docs/opcode/kcon.md
+
+- identifier: DccSetLocoThrottle
+  comments: |-
+    Set Engine Speed/Dir.
+
+    Speed/dir value, where the most significant bit is direction and the 7ls bits are the unsigned speed value.
+    Sent by a CAB or equivalent to request an engine speed/dir change.
+  value: 71
+  commentsFrom: docs/opcode/dspd.md
+
+- identifier: DccSetLocoFlags
+  comments: |-
+    Set Engine Flags.
+
+    Sent by a cab to notify the command station of a change in engine flags.
+
+    Bits 0-1: Speed Mode (00 =128 speed steps, 01 =14 speed steps,10 =28 speed steps with interleave steps, 11 =28 speed steps)
+    Bit 2:Lights On/OFF Bit 3:Engine relative direction
+    Bits 4-5: Engine state (active =0 , consisted =1, consist master=2, inactive=3)
+    Bits 6-7: Reserved.
+  value: 72
+  commentsFrom: docs/opcode/dflg.md
+
+- identifier: DccLocoFunctionOn
+  comments: |-
+    Set Engine function on.
+
+    Sent by a cab to turn on a specific loco function.
+    This provides an alternative method to DFUN for controlling loco functions. A command
+  value: 73
+  commentsFrom: docs/opcode/dfnon.md
+
+- identifier: DccLocoFunctionOff
+  comments: |-
+    Set Engine function off.
+
+    Sent by a cab to turn off a specific loco function.
+    This provides an alternative method to DFUN for controlling loco functions. A command
+  value: 74
+  commentsFrom: docs/opcode/dfnof.md
+
+- identifier: DccServiceModeStatus
+  comments: |-
+    Service mode status.
+
+    Status returned by command station/programmer at the end of a programming operation that does not return data. Response to QCVS to indicate no data.
+  value: 76
+  commentsFrom: docs/opcode/sstat.md
+
+- identifier: ResetModuleToFactory
+  comments: |-
+    Reset to manufacturer settings.
+    Reset a module back to manufacturer settings.
+  value: 79
+  commentsFrom: docs/opcode/nnrsm.md
+
+- identifier: RequestNewNodeNumber
+  comments: |-
+    Request node number.
+
+    The module is requesting that it is provided with a new node number.
+    A configuration tool should respond with SNN to provide the requesting
+  value: 80
+  commentsFrom: docs/opcode/rqnn.md
+
+- identifier: NodeNumberReleased
+  comments: |-
+    Node number release.
+
+    A node signals that it no longer requires a node number by sending NNREL.
+    The module will do this upon moving from normal mode to setup mode.
+  value: 81
+  commentsFrom: docs/opcode/nnrel.md
+
+- identifier: NodeNumberAck
+  comments: |-
+    Node number acknowledge.
+
+    This message is sent in response to SNN.
+    A node signals that it will
+  value: 82
+  commentsFrom: docs/opcode/nnack.md
+
+- identifier: PutNodeIntoLearnMode
+  comments: |-
+    Set node into learn mode.
+
+    Sent by a configuration tool to put a specific node into learn mode.
+  value: 83
+  commentsFrom: docs/opcode/nnlrn.md
+  deprecated: "Replaced by MODE in VLCB"
+
+- identifier: ReleaseNodeFromLearnMode
+  comments: |-
+    Release node from learn mode.
+
+    Sent by a configuration tool to take the module out of learn mode and revert to normal operation.
+  value: 84
+  commentsFrom: docs/opcode/nnuln.md
+  deprecated: "Replaced by MODE in VLCB"
+
+- identifier: ForgetAllLearnedEvents
+  comments: |-
+    Clear all events from a node.
+
+    Sent by a configuration tool to clear all events from a specific node.
+    Must be in learn mode first to safeguard against accidental erasure of all events
+  value: 85
+  commentsFrom: docs/opcode/nnclr.md
+
+- identifier: QueryAvailableEventSlots
+  comments: |-
+    Read the number of event slots available in a node.
+
+    Sent by a configuration tool to read the number of available event slots in a node.
+  value: 86
+  commentsFrom: docs/opcode/nnevn.md
+
+- identifier: QueryAllLearnedEvents
+  comments: |-
+    Read back all stored events in a node.
+
+    There MUST be no hidden events.
+    Sent by a configuration tool to read all the stored events in a node.
+  value: 87
+  commentsFrom: docs/opcode/nerd.md
+
+- identifier: QueryLearnedEventCount
+  comments: |-
+    Request to read number of stored events.
+
+    Sent by a configuration tool to read the number of stored events in a node.
+  value: 88
+  commentsFrom: docs/opcode/rqevn.md
+
+- identifier: WriteAck
+  comments: |-
+    Write acknowledge.
+
+    Sent by a node to indicate the completion of a write to memory operation.
+    All nodes must issue WRACK when a write operation to node variables, events or event variables has completed.
+    This allows for teaching nodes where the processing time may be slow.
+  value: 89
+  commentsFrom: docs/opcode/wrack.md
+  deprecated: "Replaced by GRSP in VLCB"
+
+- identifier: QueryNodeData
+  comments: |-
+    Request node data event.
+
+    Sent by one node to read the data event from another node.(eg: RFID data).
+  value: 90
+  commentsFrom: docs/opcode/rqdat.md
+
+- identifier: RequestDeviceDataShortMode
+  comments: |-
+    Request device data –short mode.
+
+    To request a ‘data set’ from a device using the short event method where DN is the device number.
+  value: 91
+  commentsFrom: docs/opcode/rqdds.md
+
+- identifier: RebootIntoBootloader
+  comments: |-
+    Put node into bootloading mode.
+    For modules with no NN then the NN of the command must be zero. For nodes in Normal mode the command must contain the NN of the target node. Sent by a configuration tool to prepare for loading a new program.
+  value: 92
+  commentsFrom: docs/opcode/bootm.md
+  deprecated: "Replaced by MODE in VLCB"
+
+- identifier: ForceCanEnumeration
+  comments: |-
+    Force a self enumeration cycle for use with CAN.
+
+    For nodes in Normal mode using CAN as a transport.
+    This message will force a self-enumeration cycle for the specified node.
+    A new CAN_ID will be allocated if needed.
+  value: 93
+  commentsFrom: docs/opcode/enum.md
+  deprecated: "Replaced with automatic self enumeration after duplicate CANID detection"
+
+- identifier: RestartNode
+  comments: |-
+    Reset module’s CPU.
+
+    Reset a module’s microprocessor.
+  value: 94
+  commentsFrom: docs/opcode/nnrst.md
+
+- identifier: ExtOpCode1
+  comments: |-
+    Extended opcode with 1 additional byte.
+
+    Reserved to allow the 1 additional bytes range to be extended by a further 256 opcodes.
+  value: 95
+  commentsFrom: docs/opcode/extc1.md
+
+- identifier: DccSetLocoFunctions
+  comments: |-
+    Set Engine functions.
+
+    <Fn1>is the function range 1 is F0(FL) to F4, 2 is F5 to F8, 3 is F9 to F12, 4 is F13 to F20, 5 is F21to F28) <Fn2> is the NMRA DCC format function byte for that range in corresponding bits. A bit set to 1 turns function “on” and a cleared bit sets function “off”. Sent by a CAB or equivalent to request an engine Fn state change.
+  value: 96
+  commentsFrom: docs/opcode/dfun.md
+
+- identifier: DccQueryLocoSession
+  comments: |-
+    Get engine session.
+
+    <Flags> contains flag bits as follows: Bit 0: Set for "Steal" mode Bit 1: Set for "Share" mode. Both bits set to 0 is exactly equivalent to an RLOC request but
+  value: 97
+  commentsFrom: docs/opcode/gloc.md
+
+- identifier: DccCommandStationError
+  comments: |-
+    Command Station Error report.
+
+    Sent in response to an error situation by a command station.
+    See Appendix A - DCC ERR error codes for a list of error codes.
+  value: 99
+  commentsFrom: docs/opcode/err.md
+
+- identifier: NodeConfigurationError
+  comments: |-
+    Error messages from nodes during configuration.
+
+    Sent by node if there is an error when a configuration command is sent. See Appendix C - CMDERR error codes for the list of supported codes.
+  value: 111
+  commentsFrom: docs/opcode/cmderr.md
+
+- identifier: AvailableEventSlots
+  comments: |-
+    Event space left reply from node.
+
+    Spaces is a one byte value giving the number of available event spaces left in the node’s event table.
+    This is the maximum number of additional events that can be stored by the module.
+  value: 112
+  commentsFrom: docs/opcode/evnlf.md
+
+- identifier: QueryNodeVariable
+  comments: |-
+    Request read of a node variable.
+
+    NV# is the index for the node variable value requested.
+    Response is NVANS.
+  value: 113
+  commentsFrom: docs/opcode/nvrd.md
+
+- identifier: QueryLearnedEventByIndex
+  comments: |-
+    Request read of stored event by event index.
+
+    EN# is the index for the stored event requested.
+  value: 114
+  commentsFrom: docs/opcode/nenrd.md
+
+- identifier: QueryNodeParameterByIndex
+  comments: |-
+    Request read of a node parameter by index.
+
+    Para# is the index for the parameter requested. Reading Index 0 first returns a PARAN with the number of available
+  value: 115
+  commentsFrom: docs/opcode/rqnpn.md
+
+- identifier: LearnedEventCount
+  comments: |-
+    Number of events stored by node.
+
+    Response to request RQEVN
+  value: 116
+  commentsFrom: docs/opcode/numev.md
+
+- identifier: SetNodeCanId
+  comments: |-
+    Set the CAN_ID in the node.
+
+    Used to force a specified CAN_ID into a node. Value range is from 1 to 0x63 (99 decimal). This OPC must be used with care as duplicate CAN_IDs are not allowed.
+  value: 117
+  commentsFrom: docs/opcode/canid.md
+  deprecated: "Replaced with Self-enumeration in VLCB"
+
+- identifier: PutNodeIntoMode
+  comments: |-
+    Request a change to a module’s operating mode.
+
+    Request to change the operational mode of the module.
+  value: 118
+  commentsFrom: docs/opcode/mode.md
+
+- identifier: ServiceDiscoveryQuery
+  comments: |-
+    Request service discovery.
+
+    Request service data from a module.
+    If the ServiceIndex is zero then the module responds with a SD
+  value: 120
+  commentsFrom: docs/opcode/rqsd.md
+
+- identifier: ExtOpCode2
+  comments: |-
+    Extended opcode with 2 additional bytes.
+
+    Reserved to allow the 2 additional bytes range to be extended by a
+    further 256 opcodes.
+  value: 127
+  commentsFrom: docs/opcode/extc2.md
+
+- identifier: DccSendRawPacket3
+  comments: |-
+    Request 3-byte DCC Packet.
+
+    Allows a CAB or equivalent to request a 3 byte DCC packet to be sent to the track. The packet is sent <REP> times and is not refreshed on a regular basis. Note: a 3 byte DCC packet is the minimum allowed.
+  value: 128
+  commentsFrom: docs/opcode/rdcc3.md
+
+- identifier: DccWriteCvByteInOpsMode
+  comments: |-
+    Write CV (byte) in OPS mode.
+
+    Sent to the command station to write a DCC CV byte in OPS mode to a specific loco (on the main).
+  value: 130
+  commentsFrom: docs/opcode/wcvo.md
+
+- identifier: DcWriteCvBitInOpsMode
+  comments: |-
+    Write CV (bit) in OPS mode.
+    Sent to the command station to write a DCC CV in OPS mode to specific loco (on the main). The format for Value is that specified in RP 9.2.1 for OTM bit manipulation in a DCC packet. This is ‘111CDBBB’ where C here is always 1 as only ‘writes’ are possible OTM (unless some loco ACK scheme like RailCom is used). D is the bit value, either 0 or 1 and BBB is the bit position in the CV byte. 000 to 111 for bits 0 to 7.
+  value: 131
+  commentsFrom: docs/opcode/wcvb.md
+
+- identifier: DccReadCv
+  comments: |-
+    Read CV.
+    This command is used exclusively with service mode.
+    Sent by the cab to the command station in order to read a CV value.
+  value: 132
+  commentsFrom: docs/opcode/qcvs.md
+
+- identifier: DccCvValue
+  comments: |-
+    Report CV.
+
+    This command is used exclusively with service mode.
+    Sent by the command station to report a read CV in response to QCVS.
+  value: 133
+  commentsFrom: docs/opcode/pcvs.md
+
+- identifier: QueryDiagnosticData
+  comments: |-
+    Request diagnostic data.
+
+    Request diagnostic data from a module.
+    If the requested diagnostic data is zero then a response for all diagnostic data is returned.
+  value: 135
+  commentsFrom: docs/opcode/rdgn.md
+
+- identifier: SetNodeVariable
+  comments: |-
+    Set a NV value with read back.
+    Sets a NV value and additionally responds with the new value.nvset
+    The new value may not be the value which was requested to be written.
+  value: 142
+  commentsFrom: docs/opcode/nvsetrd.md
+
+- identifier: LongEventAccessoryOn
+  comments: |-
+    Accessory ON long event.
+
+    Indicates an ‘ON’ event using the full event number of 4 bytes (long event). An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions.
+  value: 144
+  commentsFrom: docs/opcode/acon.md
+
+- identifier: LongEventAccessoryOff
+  comments: |-
+    Accessory OFF long event.
+
+    Indicates an ‘OFF’ event using the full event number of 4 bytes (long event). An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions.
+  value: 145
+  commentsFrom: docs/opcode/acof.md
+
+- identifier: QueryLongEventAccessoryState
+  comments: |-
+    Accessory Request Event.
+
+    Indicates a ‘request’ event using the full event number of 4 bytes (long event).
+    A request event is used to elicit a status response from a producer when it is required to know the ‘state’ of the producer without producing an ON or OFF event.
+  value: 146
+  commentsFrom: docs/opcode/areq.md
+
+- identifier: LongEventAccessoryStateOn
+  comments: |-
+    Accessory Response Event.
+
+    Indicates an ‘ON’ response. A response is a reply to a status request (AREQ) without producing an ON or OFF event.
+  value: 147
+  commentsFrom: docs/opcode/aron.md
+
+- identifier: LongEventAccessoryStateOff
+  comments: |-
+    Accessory Response Event (AROF).
+
+    Indicates an ‘OFF’ response. A response is a reply to a status request (AREQ) without producing an ON or OFF event.
+  value: 148
+  commentsFrom: docs/opcode/arof.md
+
+- identifier: ForgetLearnedEvent
+  comments: |-
+    Unlearn an event in learn mode.
+
+    Sent by a configuration tool to remove an event from a node.
+  value: 149
+  commentsFrom: docs/opcode/evuln.md
+
+- identifier: LegacySetNodeVariable
+  comments: |-
+    Set a node variable.
+
+    Sent by a configuration tool to set a node variable. NV# is the NV index number.
+  value: 150
+  commentsFrom: docs/opcode/nvset.md
+  deprecated: "Deprecated and replaced by NVSETRD"
+
+- identifier: NodeVariableValue
+  comments: |-
+    Response to a request for a node variable value.
+
+    Sent by node in response to request NVRD or NVSETRD.
+  value: 151
+  commentsFrom: docs/opcode/nvans.md
+
+- identifier: ShortEventAccessoryOn
+  comments: |-
+    Accessory Short ON.
+
+    Indicates an ‘ON’ event using the short event number of 2 LS bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event.
+  value: 152
+  commentsFrom: docs/opcode/ason.md
+
+- identifier: ShortEventAccessoryOff
+  comments: |-
+    Accessory Short OFF.
+
+    Indicates an ‘OFF’ event using the short event number of 2 LS bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event.
+  value: 153
+  commentsFrom: docs/opcode/asof.md
+
+- identifier: QueryShortEventAccessoryState
+  comments: |-
+    Accessory Short Request Event.
+
+    Indicates a ‘request’ event using the short event number of 2 LS bytes. A request event is used to elicit a status response from a producer when it is required to know the ‘state’ of the producer without producing an ON or OFF event.
+  value: 154
+  commentsFrom: docs/opcode/asrq.md
+
+- identifier: NodeParameterValue
+  comments: |-
+    Response to request for individual node parameter RQNPN.
+
+    NN is the node number of the sending node. Para# is the index of the parameter and Para val is the parameter value. Returns a parameter value. Parameter index is the parameter number and matches that in the RQNPN request.
+  value: 155
+  commentsFrom: docs/opcode/paran.md
+
+- identifier: QueryEventVariable
+  comments: |-
+    Request for read of an event variable.
+
+    This request differs from B2 (REQEV) as it doesn’t need to be in learn
+  value: 156
+  commentsFrom: docs/opcode/reval.md
+
+- identifier: ShortEventAccessoryStateOn
+  comments: |-
+    Accessory Short Response Event.
+
+    Indicates an ‘ON’ response. A response is a reply to a status request (ASRQ) without producing an ON or OFF event.
+  value: 157
+  commentsFrom: docs/opcode/arson.md
+
+- identifier: ShortEventAccessoryStateOff
+  comments: |-
+    Accessory Short Response Event.
+
+    Indicates an ‘OFF’ response. A response is a reply to a status request (ASRQ) without producing an ON or OFF event.
+  value: 158
+  commentsFrom: docs/opcode/arsof.md
+
+- identifier: ExtOpCode3
+  comments: |-
+    Extended opcode with 3 additional bytes.
+    Reserved to allow the 3 additional bytes range to be extended by a further 256 opcodes.
+  value: 159
+  commentsFrom: docs/opcode/extc3.md
+
+- identifier: DccSendRawPacket4
+  comments: |-
+    Request 4-byte DCC Packet.
+    Allows a CAB or equivalent to request a 4 byte DCC packet to be sent to the track. The packet is sent <REP> times and is not refreshed on a regular basis.
+  value: 160
+  commentsFrom: docs/opcode/rdcc4.md
+
+- identifier: DccWriteCvInServiceMode
+  comments: |-
+    Write CV in Service mode.
+    Sent to the command station to write a DCC CV in service mode.
+  value: 162
+  commentsFrom: docs/opcode/wcvs.md
+
+- identifier: Heartbeat
+  comments: |-
+    Heartbeat from module.
+
+    Heartbeat message from module indicating that the module is alive and communicating on the bus. Sent every 5 seconds by a module to confirm it is alive and connected to the network along with an indication of module status. Sequence is a count from 0 incrementing on each message transmitted and wrapping around to zero, It facilitates detection of missing frames. Status: This is a binary representation of the module’s diagnostic status as outlined in MNS Specification Section 8.3. 0x00 Shall always represent “normal“ operation. StatusBits: Reserved for future expansion, set to 0x00
+  value: 171
+  commentsFrom: docs/opcode/heartb.md
+
+- identifier: ServiceDiscoveryResponse
+  comments: |-
+    Service discovery response.
+
+    The version of a service supported by a module.
+    Sent in response to RQSD with ServiceIndex = 0. A number of SD
+  value: 172
+  commentsFrom: docs/opcode/sd.md
+
+- identifier: GenericResponse
+  comments: |-
+    Generic Response.
+
+    Generic response for a configuration change request. Result byte indicates ok for success or an error code in case of failure. Indicates the module is ready for further configuration. The CMDERR codes are supported and in addition service specific
+  value: 175
+  commentsFrom: docs/opcode/grsp.md
+
+- identifier: LongEventAccessoryOn1
+  comments: |-
+    Accessory ON.
+
+    Indicates an ‘ON’ event using the full event number of 4 bytes with one additional data byte. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 176
+  commentsFrom: docs/opcode/acon1.md
+
+- identifier: LongEventAccessoryOff1
+  comments: |-
+    Accessory OFF.
+
+    Indicates an ‘OFF’ event using the full event number of 4 bytes with one additional databyte. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 177
+  commentsFrom: docs/opcode/acof1.md
+
+- identifier: QueryEventVariableInLearnMode
+  comments: |-
+    Read event variable in learn mode.
+
+    Allows a configuration tool to read stored event variables from a node. EV# is the EV variable index. NN and EN identify the event and not the module. Reading EV#0 shall first return the number of EVs followed by a series of EVANS with the value for each EV.
+  value: 178
+  commentsFrom: docs/opcode/reqev.md
+
+- identifier: LongEventAccessoryStateOn1
+  comments: |-
+    Accessory Response Event.
+
+    Indicates an ‘ON’ response with one additional data byte. A response is a reply to a status request (AREQ) without producing an ON or OFF
+  value: 179
+  commentsFrom: docs/opcode/aron1.md
+
+- identifier: LongEventAccessoryStateOff1
+  comments: |-
+    Accessory Response Event.
+    Indicates an ‘OFF’ response with one additional data byte. A response is a reply to a status request (AREQ) without producing an ON or OFF
+  value: 180
+  commentsFrom: docs/opcode/arof1.md
+
+- identifier: EventVariableValue
+  comments: |-
+    Response to request for read of EV value.
+
+    This is the response to the request to read an EV - REVAL.
+  value: 181
+  commentsFrom: docs/opcode/neval.md
+
+- identifier: NodeInfo
+  comments: |-
+    Response to Query Node - QNN.
+
+    Sent in response to a QNN request.
+  value: 182
+  commentsFrom: docs/opcode/pnn.md
+
+- identifier: ShortEventAccessoryOn1
+  comments: |-
+    Accessory Short ON.
+
+    Indicates an ‘ON’ event using the short event number of 2 LS bytes with one added data byte. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 184
+  commentsFrom: docs/opcode/ason1.md
+
+- identifier: ShortEventAccessoryOff1
+  comments: |-
+    Accessory Short OFF.
+
+    Indicates an ‘OFF’ event using the short event number of 2 LS bytes with one added data byte. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 185
+  commentsFrom: docs/opcode/asof1.md
+
+- identifier: ShortEventAccessoryStateOn1
+  comments: |-
+    Accessory Short Response Event.
+    Indicates an ‘ON’ response with one added data byte. A response is a reply to a status request (ASRQ)without producing an ON or OFF
+  value: 189
+  commentsFrom: docs/opcode/arson1.md
+
+- identifier: ShortEventAccessoryStateOff1
+  comments: |-
+    Accessory Short Response Event with one data byte.
+    Indicates an ‘OFF’ response with one added data byte. A response is a reply to a status request (ASRQ) without producing an ON or OFF event. A response event is a reply to a status request (ASRQ)without
+  value: 190
+  commentsFrom: docs/opcode/arsof1.md
+
+- identifier: ExtOpCode4
+  comments: |-
+    Extended opcode with 4 additional bytes.
+    Reserved to allow the 4 additional bytes range to be extended by a further 256 opcodes.
+  value: 191
+  commentsFrom: docs/opcode/extc4.md
+
+- identifier: DccSendRawPacket5
+  comments: |-
+    Request 5-byte DCC Packet.
+    Allows a CAB or equivalent to request a 5 byte DCC packet to be sent to the track. The packet is sent <REP> times and is not refreshed on a regular basis.
+  value: 192
+  commentsFrom: docs/opcode/rdcc5.md
+
+- identifier: DccWriteCvByteInOpsModeByAddress
+  comments: |-
+    Write CV (byte) in OPS mode by address.
+
+    Sent to the command station to write a DCC CV byte in OPS mode to specific loco (on the main). Used by computer based ops mode programmer that does not have a valid throttle handle.
+  value: 193
+  commentsFrom: docs/opcode/wcvoa.md
+
+- identifier: DccSendDataToCab
+  comments: |-
+    Send data to the DCC CAB which is controlling a particular loco.
+
+    addrH and addrL are the loco address in the same format as RLOC and GLOC 7 bit addresses have (addrH=0). 14 bit addresses have bits 6,7 of addrH set to 1. dataCode defines the meaning of the remaining 3 bytes. The following values for dataCod have currently been defined: ● 01 - CABSIG - Transmitted by a layout control system to send signal aspects to be displayed on a cab handset as cab signalling. Parameter data1 is used for aspect1 Parameter data2 is used for aspect2 Parameter data3 is used for speed aspect1 is signalling system independent, and is defined as follows (colours in brackets correspond to UK colour light signalling, the given aspect names may be displayed differently in other signalling systems): Bits 0-1 - 2 bit aspect code 00=danger (red), 01=caution (yellow), 10=preliminary caution (double yellow), 11=proceed (green) Bit 2 - set 1 for calling on or shunt aspect (bits 0-1 would be set to 00 for danger when calling on) Bit 3 - Set 0 to indicate upper nibble is feather location, set 1 for upper nibble is theatre type route indicator Bits 4-7 - 0 - no route indicated, 1 to 6 = feather position or 1 to 16 for theatre route indication aspect1 should be set to 0xFF if no signal information is available. This can be used, for example, to indicate leaving a cab signalling area. A cab should extinguish any currently showing aspect on receipt of this code. Note that because bits 0 and 1 should be set to zero when bit 2 is set, the code 0xFF is not otherwise a valid aspect. <aspect2> may be used as required for specific signalling systems. The meaning will vary for each signalling system. For the UK 2003 rulebook, bit 0 set indicates a flashing aspect, applicable to caution, preliminary caution or proceed. For UK semaphore signalling, where there are multiple arms for
+  value: 194
+  commentsFrom: docs/opcode/cabdat.md
+
+- identifier: DiagnosticData
+  comments: |-
+    Diagnostic data response.
+
+    Diagnostic data value from a module. Sent in response to RDGN.
+  value: 199
+  commentsFrom: docs/opcode/dgn.md
+
+- identifier: FastClock
+  comments: |-
+    Fast Clock.
+
+    Used to implement a fast clock for the layout.
+  value: 207
+  commentsFrom: docs/opcode/fclk.md
+
+- identifier: LongEventAccessoryOn2
+  comments: |-
+    Accessory ON.
+
+    Indicates an ‘ON’ event using the full event number of 4 bytes with two additional data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 208
+  commentsFrom: docs/opcode/acon2.md
+
+- identifier: LongEventAccessoryOff2
+  comments: |-
+    Accessory OFF.
+
+    Indicates an ‘OFF’ event using the full event number of 4 bytes with two additional data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 209
+  commentsFrom: docs/opcode/acof2.md
+
+- identifier: TeachEvent
+  comments: |-
+    Teach an event in learn mode.
+
+    Sent by a configuration tool to a node in learn mode to teach it an event variable. Also teaches it the associated event. This command is repeated for each EV required.
+  value: 210
+  commentsFrom: docs/opcode/evlrn.md
+
+- identifier: EventVariableValueInLearnMode
+  comments: |-
+    Response to a request for an EV value in a node in learn mode.
+
+    A node response to a request from a configuration tool for the EVs associated with an event (REQEV). For multiple EVs, there will be one
+  value: 211
+  commentsFrom: docs/opcode/evans.md
+
+- identifier: LongEventAccessoryStateOn2
+  comments: |-
+    Accessory Response Event.
+
+    Indicates an ‘ON’ response event with two added data bytes. A response is a reply to a status request (AREQ) without producing an
+  value: 212
+  commentsFrom: docs/opcode/aron2.md
+
+- identifier: LongEventAccessoryStateOff2
+  comments: |-
+    Accessory Response Event.
+
+    Indicates an ‘OFF’ response event with two added data bytes. A response is a reply to a status request (AREQ) without producing an
+  value: 213
+  commentsFrom: docs/opcode/arof2.md
+
+- identifier: ShortEventAccessoryOn2
+  comments: |-
+    Accessory Short ON.
+    Indicates an ‘ON’ event using the short event number of 2 LS bytes with two added data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 216
+  commentsFrom: docs/opcode/ason2.md
+
+- identifier: ShortEventAccessoryOff2
+  comments: |-
+    Accessory Short OFF.
+    Indicates an ‘OFF’ event using the short event number of 2 LS bytes with two added data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 217
+  commentsFrom: docs/opcode/asof2.md
+
+- identifier: ShortEventAccessoryStateOn2
+  comments: |-
+    Accessory Short Response Event ON with two data bytes.
+
+    Indicates an ‘ON’ response event with two added data bytes. A response is a reply to a status request (ASRQ)without producing an ON
+  value: 221
+  commentsFrom: docs/opcode/arson2.md
+
+- identifier: ShortEventAccessoryStateOff2
+  comments: |-
+    Accessory Short Response Event OFF with two data bytes.
+
+    Indicates an ‘OFF’ response event with two added data bytes. A response is a reply to a status request (ASRQ) without producing an
+  value: 222
+  commentsFrom: docs/opcode/arsof2.md
+
+- identifier: ExtOpCode5
+  comments: |-
+    Extended opcode with 5 additional bytes.
+
+    Reserved to allow the 5 additional bytes range to be extended by a further 256 opcodes.
+  value: 223
+  commentsFrom: docs/opcode/extc5.md
+
+- identifier: DccSendRawPacket6
+  comments: |-
+    Request 6-byte DCC Packet.
+
+    Allows a CAB or equivalent to request a 6 byte DCC packet to be sent to the track. The packet is sent <REP> times and is not refreshed on a regular basis.
+  value: 224
+  commentsFrom: docs/opcode/rdcc6.md
+
+- identifier: DccLocoReport
+  comments: |-
+    Engine report.
+
+    A report of an engine entry sent by the command station. Sent in response to QLOC or as an acknowledgement of acquiring an engine
+  value: 225
+  commentsFrom: docs/opcode/ploc.md
+
+- identifier: ModuleName
+  comments: |-
+    Response to request for node name string.
+
+    Returns the type name for the module in response to RQMN. Any
+  value: 226
+  commentsFrom: docs/opcode/name.md
+
+- identifier: DccCommandStationStatus
+  comments: |-
+    Command Station status report.
+
+    Sent by the command station in response to RSTAT.
+  value: 227
+  commentsFrom: docs/opcode/stat.md
+
+- identifier: EventAck
+  comments: |-
+    Event Acknowledge.
+
+    Sent by a module to acknowledge the consumption of an event. Used for diagnostic purposes.
+  value: 230
+  commentsFrom: docs/opcode/enack.md
+
+- identifier: ExtendedServiceDiscoveryResponse
+  comments: |-
+    Extended service discovery response.
+
+    Detailed information about a service supported by a module. The data supplied is service specific. Sent in response to RQSD with ServiceIndex is not zero. A single ESD
+  value: 231
+  commentsFrom: docs/opcode/esd.md
+
+- identifier: StreamPacket
+  comments: |-
+    Streaming protocol (RFC0005).
+
+    Used to transport a relatively large block of data. StreamID is a unique layout wide identifier of a particular message stream. It is the responsibility of the layout installer/module installer to ensure that any StreamIDs are unique across the installation. StreamIDs 0~20 are reserved as CBUS system wide IDs. Users would not allocate these IDs to private streams. SequenceNum is a 0x00 to 0xFF identification of the frame sequence . 0x00 is used to denote a header frame , any number != 0x00 indicates a continuation frame. MessageLen is a 16 bit size in bytes of the transmitted message , However as only 254 continuation frames are possible the Message Len is limited to a count of 1275. However private protocols may be deployed to send larger messages and the full extent of these fields can be used. A Message length of Zero is supported, albeit rather pointless. 16 15 2 CRC16 is a standard implementation of CRC, ie P(x) = x +x +x +1. CRC fields are optional and set to 0x00 if not implemented. Continuation frames merely contain the StreamID and SequenceNum and 5 bytes of message data It is recommended that continuation frames are throttled at 1 over 20ms.
+  value: 233
+  commentsFrom: docs/opcode/dtxc.md
+
+- identifier: NodeParametersReport
+  comments: |-
+    Response to request for node parameters.
+
+    Returns the first 7 parameters for the module in response to RQNP.
+  value: 239
+  commentsFrom: docs/opcode/params.md
+
+- identifier: LongEventAccessoryOn3
+  comments: |-
+    Accessory ON.
+
+    Indicates an ‘ON’ event using the full event number of 4 bytes with three additional data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 240
+  commentsFrom: docs/opcode/acon3.md
+
+- identifier: LongEventAccessoryOff3
+  comments: |-
+    Accessory OFF.
+
+    Indicates an ‘OFF’ event using the full event number of 4 bytes with three additional data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 241
+  commentsFrom: docs/opcode/acof3.md
+
+- identifier: LearnedEventResponse
+  comments: |-
+    Response to request to read node events.
+
+    This is a response to either NERD or NENRD.
+  value: 242
+  commentsFrom: docs/opcode/enrsp.md
+
+- identifier: LongEventAccessoryStateOn3
+  comments: |-
+    Accessory Response Event.
+
+    Indicates an ‘ON’ response event with three added data bytes. A response is a reply to a status request (AREQ) without producing an
+  value: 243
+  commentsFrom: docs/opcode/aron3.md
+
+- identifier: LongEventAccessoryStateOff3
+  comments: |-
+    Accessory Response Event.
+
+    Indicates an ‘OFF’ response event with three added data bytes. A response is a reply to a status request (AREQ) without producing an
+  value: 244
+  commentsFrom: docs/opcode/arof3.md
+
+- identifier: TeachEventByIndex
+  comments: |-
+    Teach an event in learn mode using event indexing.
+
+    Sent by a configuration tool to a node in learn mode to teach it an event. The event index must be known. Also teaches it the associated event variables (EVs). This command is repeated for each EV required. Parameter EN# is ignored and this request is similar to EVLRN.
+  value: 245
+  commentsFrom: docs/opcode/evlrni.md
+
+- identifier: DataEventAccessory
+  comments: |-
+    Accessory node data event.
+
+    Indicates an event from this node with 5 bytes of data. For example, this can be used to send the 40 bits of an RFID tag. There is no event number in order to allow space for 5 bytes of data in the packet, so there can only be one data event per node. The meaning of the event is therefore dependent upon the type and use of the module.
+  value: 246
+  commentsFrom: docs/opcode/acdat.md
+
+- identifier: NodeDataEventResponse
+  comments: |-
+    Accessory node data Response.
+
+    Indicates a node data response. A response event is a reply to a status request (RQDAT) without producing a new data event.
+  value: 247
+  commentsFrom: docs/opcode/ardat.md
+
+- identifier: ShortEventAccessoryOn3
+  comments: |-
+    Accessory Short ON.
+
+    Indicates an ‘ON’ event using the short event number of 2 LS bytes with three added data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 248
+  commentsFrom: docs/opcode/ason3.md
+
+- identifier: ShortEventAccessoryOff3
+  comments: |-
+    Accessory Short OFF.
+
+    Indicates an ‘OFF’ event using the short event number of 2 LS bytes with three added data bytes. An event is sent by a module when it detects a change of state. Modules may consume the event and perform actions. The NN is not used to match events, the NN normally indicates the source of the event. The meaning of the additional data is dependent upon the application and must be agreed between the producer and consumer of the event.
+  value: 249
+  commentsFrom: docs/opcode/asof3.md
+
+- identifier: DeviceDataEventShortMode
+  comments: |-
+    Device data event (short mode).
+
+    Function is the same as ACDAT but uses device addressing so it can
+  value: 250
+  commentsFrom: docs/opcode/ddes.md
+
+- identifier: DeviceDataResponseShortMode
+  comments: |-
+    Device data response (short mode).
+
+    The response to a RQDDS request for data from a device.
+  value: 251
+  commentsFrom: docs/opcode/ddrs.md
+
+- identifier: WriteData
+  comments: |-
+    Write data.
+
+    Used to write data to a device such as a RFID tag. data1 ~ data5 is data to be written to the device. RC522 devices should have data1 set to 0
+  value: 252
+  commentsFrom: docs/opcode/ddws.md
+
+- identifier: ShortEventAccessoryStateOn3
+  comments: |-
+    Accessory Short Response Event.
+
+    Indicates an ‘ON’ response event with three added data bytes.A response is a reply to a status request (ASRQ)without producing an ON
+  value: 253
+  commentsFrom: docs/opcode/arson3.md
+
+- identifier: ShortEventAccessoryStateOff3
+  comments: |-
+    Accessory Short Response Event.
+
+    Indicates an ‘OFF’ response event with three added data bytes.A response is a reply to a status request (ASRQ) without producing an
+  value: 254
+  commentsFrom: docs/opcode/arsof3.md
+
+- identifier: ExtOpCode6
+  comments: |-
+    Extended opcode with 6 additional bytes.
+
+    Reserved to allow the 6 additional bytes range to be extended by a further 256 opcodes.
+  value: 255
+  commentsFrom: docs/opcode/extc6.md

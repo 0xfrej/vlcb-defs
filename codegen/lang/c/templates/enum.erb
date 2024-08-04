@@ -1,0 +1,9 @@
+<%= renderer.r 'docblok', lines: enum[:comments] %>
+typedef enum {
+    <% enum[:body].each do |variant| %>
+    <% if variant['comments'] %>
+    <%= renderer.r 'docblok', lines: variant['comments'] %>
+    <% end %>
+    <%= variant['identifier'] %> = <%= variant['value'] %>,
+    <% end %>
+} <%= enum[:identifier] %>;
