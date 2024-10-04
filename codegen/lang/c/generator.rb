@@ -21,7 +21,7 @@ end
 
 def update_generated_files(spec)
   renderer = Renderer.new(File.join(File.dirname(__FILE__), 'templates'))
-  ctx = { body: "", meta: nil }
+  ctx = { body: "#pragma once\n\n", meta: nil }
 
   ctx[:body] += "#pragma once\n\n"
   
