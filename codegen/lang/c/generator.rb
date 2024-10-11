@@ -23,8 +23,6 @@ def update_generated_files(spec)
   renderer = Renderer.new(File.join(File.dirname(__FILE__), 'templates'))
   ctx = { body: "#pragma once\n\n", meta: nil }
 
-  ctx[:body] += "#pragma once\n\n"
-  
   for spec_item in spec[:spec]
     ctx[:meta] = spec[:meta]
     if spec_item[:meta]
@@ -86,7 +84,7 @@ def gen_enum(ctx, renderer, enum)
   # end
 
   output = renderer.r('enum', enum: enum)
-  ctx[:body] = "#{output}#{ctx[:body]}"
+  ctx[:body] = "#{ctx[:body]}#{output}"
 
   return ctx
 end
@@ -129,7 +127,7 @@ def gen_flags(ctx, renderer, flags)
   # end
 
   output = renderer.r('flags', flags: flags)
-  ctx[:body] = "#{output}#{ctx[:body]}"
+  ctx[:body] = "#{ctx[:body]}#{output}"
 
   return ctx
 end
