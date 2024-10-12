@@ -93,6 +93,10 @@ def gen_flags(ctx, renderer, flags)
   flags_meta = flags[:meta] ? flags[:meta].merge(ctx[:meta]) : ctx[:meta]
   ctx[:meta] = flags_meta
 
+  if ctx[:meta] && ctx[:meta][:'clang-type-prefix']
+    flags[:identifier] = ctx[:meta][:'clang-type-prefix'] + flags[:identifier]
+  end
+
   flags[:comments] = parse_comments(flags[:comments])
   flags[:body].each do |flag|
     ctx[:meta] = flags_meta

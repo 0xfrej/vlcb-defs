@@ -121,21 +121,21 @@ spec:
         value: 3
       - identifier: USB
         value: 4
-  - type: Enum
-    identifier: DccCabDataCode
-    meta:
-      clang-enum-var-prefix: VLCB_DCC_CAB_
-    data_type: u8
-    comments: |
-      Defines the meaning of the remaining 3 bytes of the CABDAT message
-    body:
-      - identifier: CabSignalling
-        value: 1
-        comments: |
-          CABSIG
-          Transmitted by a layout control system to send
-          signal aspects to be displayed on a cab handset as cab
-          signalling.
+#  - type: Enum
+#    identifier: DccCabDataCode
+#    meta:
+#      clang-enum-var-prefix: VLCB_DCC_CAB_
+#    data_type: u8
+#    comments: |
+#      Defines the meaning of the remaining 3 bytes of the CABDAT message
+#    body:
+#      - identifier: Signalling
+#        value: 1
+#        comments: |
+#          CABSIG
+#          Transmitted by a layout control system to send
+#          signal aspects to be displayed on a cab handset as cab
+#          signalling.
   # - type: Enum
   #   #todo: these are probably flags figure the values from docs
   #   identifier: DccCabSignallingAspect1
@@ -179,7 +179,7 @@ spec:
   - type: Enum
     identifier: CommandError
     meta:
-      clang-enum-var-prefix: VLCB_CMDERR
+      clang-enum-var-prefix: VLCB_CMDERR_
     data_type: u8
     comments: |
       Error codes for CMDERR message
@@ -232,7 +232,7 @@ spec:
   - type: Enum
     identifier: DccError
     meta:
-      clang-enum-var-prefix: VLCB_DCC_ERR
+      clang-enum-var-prefix: VLCB_DCC_ERR_
     data_type: u8
     comments: |
       Error codes for ERR message
