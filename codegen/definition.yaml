@@ -583,7 +583,6 @@ spec:
     comments: |
       Flags in node parameter FLAGS
     body:
-      #todo: these are flags though i have to figure out if the values are bits or actual masks
       - identifier: EventsUnsupported
         value: 0
         comments: Module doesn't support events
@@ -595,7 +594,7 @@ spec:
         comments: Module is a producer of events
       - identifier: EventCombi
         value: 3
-        comments: Module is both a consumer and producer of events
+        comments: Module is both a consumer and producer of events (Shorthand for EventConsumer combined with EventProducer)
       - identifier: FLiM
         meta:
           dont-split-enum-var: true
