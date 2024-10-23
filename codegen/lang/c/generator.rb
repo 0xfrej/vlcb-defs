@@ -1,27 +1,52 @@
 require_relative "../../template"
-require 'tomlib'
-require 'set'
+require "tomlib"
+require "set"
 
-OUTPUT_PATH = File.expand_path(File.join(File.dirname(__FILE__), 'output'))
-TARGET_PATH = File.expand_path(File.join(OUTPUT_PATH, 'vlcb_defs.h'))
+OUTPUT_PATH = File.expand_path(File.join(File.dirname(__FILE__), "output"))
+TARGET_PATH = File.expand_path(File.join(OUTPUT_PATH, "vlcb_defs.h"))
 
 def generate_c(spec)
   FileUtils.mkdir_p(OUTPUT_PATH) unless Dir.exist?(OUTPUT_PATH)
 
-  puts "Generating C files"
+  puts("Generating C files")
   update_generated_files(spec)
-  puts "Formatting files"
-  format_files()
-  puts "Done"
+  puts("Formatting files")
+  format_files
+  puts("Done")
 end
 
-def format_files()
+def transfomr_data_type(type)
+  case type
+  when "u8"
+    return "uint8_t"
+  when "u16"
+    return "uint16_t"
+  when "u32"
+    return "uint32_t"
+  when "u64"
+    return "uint64_t"
+  when "i8"
+    return "int8_t"
+  when "i16"
+    return "int16_t"
+  when "i32"
+    return "int32_t"
+  when "i64"
+    return "int64_t"
+  when "char"
+    return "char"
+  else
+    raise "Unimplemented codegen spec data type mapping #{type}"
+  end
+end
+
+def format_files
   system("clang-format #{TARGET_PATH} > #{TARGET_PATH}.tmp && mv #{TARGET_PATH}.tmp #{TARGET_PATH}")
 end
 
 def update_generated_files(spec)
-  renderer = Renderer.new(File.join(File.dirname(__FILE__), 'templates'))
-  ctx = { body: "#pragma once\n\n", meta: nil }
+  renderer = Renderer.new(File.join(File.dirname(__FILE__), "templates"))
+  ctx = {body: "#pragma once\n\n#include <stdint.h>\n\n", meta: nil}
 
   for spec_item in spec[:spec]
     ctx[:meta] = spec[:meta]
@@ -46,30 +71,31 @@ def gen_enum(ctx, renderer, enum)
   enum_meta = enum[:meta] ? enum[:meta].merge(ctx[:meta]) : ctx[:meta]
   ctx[:meta] = enum_meta
 
-  if ctx[:meta] && ctx[:meta][:'clang-type-prefix']
-    enum[:identifier] = ctx[:meta][:'clang-type-prefix'] + enum[:identifier]
+  if ctx[:meta] && ctx[:meta][:"clang-type-prefix"]
+    enum[:identifier] = ctx[:meta][:"clang-type-prefix"] + enum[:identifier]
   end
 
   enum[:comments] = parse_comments(enum[:comments])
   enum[:body].each do |variant|
     ctx[:meta] = enum_meta
-    if variant['meta']
-      ctx[:meta] = variant['meta'].merge(ctx[:meta])
+    if variant["meta"]
+      ctx[:meta] = variant["meta"].merge(ctx[:meta])
     end
 
-    id = variant['identifier']
-    if ctx[:meta] && ctx[:meta][:'dont-split-enum-var'] === true
+    id = variant["identifier"]
+    if ctx[:meta] && ctx[:meta][:"dont-split-enum-var"] === true
       id = id.upcase
     else
       id = camel_to_upper_snake(id)
     end
-    if ctx[:meta] && ctx[:meta][:'clang-enum-var-prefix']
-      id = ctx[:meta][:'clang-enum-var-prefix'] + id
+
+    if ctx[:meta] && ctx[:meta][:"clang-enum-var-prefix"]
+      id = ctx[:meta][:"clang-enum-var-prefix"] + id
     end
-    variant['identifier'] = id
 
-    variant['comments'] = parse_comments(variant['comments'])
+    variant["identifier"] = id
 
+    variant["comments"] = parse_comments(variant["comments"])
     #TODO: implement rendering doc markdown files into comments
     # if variant['commentsFrom']
     #   variant['annotations'] = [
@@ -83,7 +109,11 @@ def gen_enum(ctx, renderer, enum)
   #   flags[:annotations].append("doc  = include_str!(\"../#{ctx[:commentsFrom]}\")")
   # end
 
-  output = renderer.r('enum', enum: enum)
+  if enum[:data_type]
+    enum[:data_type] = transfomr_data_type(enum[:data_type])
+  end
+
+  output = renderer.r("enum", enum: enum)
   ctx[:body] = "#{ctx[:body]}#{output}"
 
   return ctx
@@ -93,30 +123,31 @@ def gen_flags(ctx, renderer, flags)
   flags_meta = flags[:meta] ? flags[:meta].merge(ctx[:meta]) : ctx[:meta]
   ctx[:meta] = flags_meta
 
-  if ctx[:meta] && ctx[:meta][:'clang-type-prefix']
-    flags[:identifier] = ctx[:meta][:'clang-type-prefix'] + flags[:identifier]
+  if ctx[:meta] && ctx[:meta][:"clang-type-prefix"]
+    flags[:identifier] = ctx[:meta][:"clang-type-prefix"] + flags[:identifier]
   end
 
   flags[:comments] = parse_comments(flags[:comments])
   flags[:body].each do |flag|
     ctx[:meta] = flags_meta
-    if flag['meta']
-      ctx[:meta] = flag['meta'].merge(ctx[:meta])
+    if flag["meta"]
+      ctx[:meta] = flag["meta"].merge(ctx[:meta])
     end
 
-    flag['comments'] = parse_comments(flag['comments'])
+    flag["comments"] = parse_comments(flag["comments"])
 
-    id = flag['identifier']
-    if ctx[:meta] && ctx[:meta][:'dont-split-enum-var'] === true
+    id = flag["identifier"]
+    if ctx[:meta] && ctx[:meta][:"dont-split-enum-var"] === true
       id = id.upcase
     else
       id = camel_to_upper_snake(id)
     end
-    if ctx[:meta] && ctx[:meta][:'clang-enum-var-prefix']
-      id = ctx[:meta][:'clang-enum-var-prefix'] + id
-    end
-    flag['identifier'] = id
 
+    if ctx[:meta] && ctx[:meta][:"clang-enum-var-prefix"]
+      id = ctx[:meta][:"clang-enum-var-prefix"] + id
+    end
+
+    flag["identifier"] = id
     #TODO: implement rendering doc markdown files into comments
     # if flag['commentsFrom']
     #   flag['annotations'] = [
@@ -130,7 +161,11 @@ def gen_flags(ctx, renderer, flags)
   #   flags[:annotations].append("doc  = include_str!(\"../#{ctx[:commentsFrom]}\")")
   # end
 
-  output = renderer.r('flags', flags: flags)
+  if flags[:data_type]
+    flags[:data_type] = transfomr_data_type(flags[:data_type])
+  end
+
+  output = renderer.r("flags", flags: flags)
   ctx[:body] = "#{ctx[:body]}#{output}"
 
   return ctx
@@ -142,7 +177,7 @@ end
 
 def camel_to_upper_snake(str)
   if str.is_a?(String)
-    str.gsub(/([a-z])([A-Z])/, '\1_\2').upcase
+    str.gsub(/([a-z])([A-Z])/, "\\1_\\2").upcase
   else
     raise "Input '#{str}' is not a string"
   end

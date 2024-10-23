@@ -1,9 +1,10 @@
 <%= renderer.r 'docblok', lines: flags[:comments] %>
-typedef enum {
+typedef <%= flags[:data_type] %> <%= flags[:identifier] %>;
+enum <%= flags[:identifier] %> {
     <% flags[:body].each do |flag| %>
     <% if flag['comments'] %>
     <%= renderer.r 'docblok', lines: flag['comments'] %>
     <% end %>
     <%= flag['identifier'] %> = <%= "0x" + ("%0#{flags[:data_type_size]}x" % flag['value']) %>,
     <% end %>
-} <%= flags[:identifier] %>;
+};
